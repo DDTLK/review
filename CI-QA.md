@@ -2,8 +2,6 @@
 
 ## Fuego
 
-Waiting Fuego 1.2
-
 <http://fuegotest.org/wiki/Fuego_To_Do_List>
 
 ### Fuego Overview
