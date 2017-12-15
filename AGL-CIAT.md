@@ -1,4 +1,88 @@
-# Review on on CI
+# Continuous Integration and Automated Test (CIAT)
+
+CIAT is the abbreviation of Continuous Integration and Automated Test. It should include:
+
+* CI pipeline which executes tests on user's demand or triggered by upstream changes automatically
+* collection of source code from upstream
+* automated instructions for building/deploying built upstream components
+* ability to include binary artifacts
+* automated test pipeline which executes sets of tests
+* publication of built distro/component and test results/logs
+* mechanism for formal code review prior to merging of changes
+* demonstration of license compliance
+
+## Charter
+
+The Continuous Integration and Test Expert Group is responsible for defining requirements and architecture of the AGL software distribution integration and test infrastructure. Topics include:
+
+* Build and smoke test of Gerrit submissions on all hardware
+* Daily snapshot build and testing
+* Device tests on real hardware
+* Test environments such as JTA and Lava
+* Test suites such as LTP
+* UI testing (OpenQA)
+
+## Current Status
+
+* AGL currently uses Jenkins for CI and Lava + Fuego for running test.
+* Jenkins builds for QEMU tied into Gerrit for patch submissions
+
+ The EG is working on these goals:
+
+* Build and smoke test of Gerrit submissions on all hardware
+* Daily snapshot build and testing
+* Device tests on real hardware
+* Integrate test environments such as fuego and Lava
+* Investigate UI testing (OpenQA)
+
+## Introduction
+
+AGL uses a combination of tools for its CI tests.
+
+* AGL-JTA (a version of [Fuego](https://elinux.org/Fuego) is the frontend - more information can be found here: [AGL-JTA](https://wiki.automotivelinux.org/agl-jta)
+* [Lava](https://validation.linaro.org/static/docs/v2/index.html) as tool to manage the boards remotely.
+
+Both tools can actually work independently, both can execute tests. We combine them to get the best out of both worlds:
+
+* AGL-JTA/Fuego has an extensive predefined set of tests and strong reporting capabilities
+* LAVA is capable and excels at managing single boards and board-farms (power-up, deployment of filesystem and so on) and exposes a remote API.
+
+## Use-cases
+
+From the above you can deduct the following use-cases:
+
+* In-house lab - for an isolated, in-house lab, AGL-JTA/Fuego is likely your choice. With a small set of boards on the same network, you only need AGL-JTA/Fuego - no LAVA server is needed.
+* Board-Farm - to scale-out the testing and parallelize the execution, we need to manage multiple boards of the same type/family and multiple different boards/brands. In this case you need LAVA to mange the boards.
+* Remote Labs - to distribute the boards across sites and manage them, you need LAVA.
+
+## Workflow
+
+The setup supports multiple operation methods:
+
+* Code-change trigger:
+  * Gerrit triggers JTA, which runs the test. Board allocation and bring-up is handled by Lava.
+* Scripted trigger:
+  * Script triggers JTA, which runs the test. Board allocation and bring-up is handled by Lava.
+* Manual trigger:
+  * Manual trigger in JTA, which runs the test. Board allocation and bring-up is handled by Lava.
+* Direct test:
+  * Board allocation, bring-up and test execution through Lava.
+
+## Jenkins
+
+Jenkins is a self-contained, open source automation server which can be used to automate all sorts of tasks related to building, testing, and delivering or deploying software.
+
+Jenkins can be installed through native system packages, Docker, or even run standalone by any machine with a Java Runtime Environment (JRE) installed.
+
+### Blue Ocean plugin
+
+Blue Ocean is built as a collection of Jenkins plugins itself. There is one key difference, however. It provides both its own endpoint for http requests and delivers up html/javascript via a different path, without the existing Jenkins UI markup/scripts. React.js and ES6 are used to deliver the javascript components of Blue Ocean. Inspired by this excellent open source project (react-plugins) an <"ExtensionPoint">pattern was established, that allows extensions to come from any Jenkins plugin (only with Javascript) and should they fail to load, have failures isolated.
+
+* Sophisticated visualizations of continuous delivery (CD) Pipelines, allowing for fast and intuitive comprehension of pipeline’s status.
+* Pipeline editor makes creation of Pipelines approachable by guiding the user through an intuitive and visual process to create a Pipeline.
+* Personalization to suit the role-based needs of each member of the team.
+* Pinpoint precision when intervention is needed and/or issues arise. Blue Ocean shows where in the pipeline attention is needed, facilitating exception handling and increasing productivity.
+* Native integration for branch and pull requests enables maximum developer productivity when collaborating on code with others in GitHub and Bitbucket.
 
 ## Fuego
 
