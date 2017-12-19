@@ -68,6 +68,10 @@ The setup supports multiple operation methods:
 * Direct test:
   * Board allocation, bring-up and test execution through Lava.
 
+## Further
+
+TODO!!!!!!
+
 ## Jenkins
 
 Jenkins is a self-contained, open source automation server which can be used to automate all sorts of tasks related to building, testing, and delivering or deploying software.
@@ -86,20 +90,12 @@ Blue Ocean is built as a collection of Jenkins plugins itself. There is one key 
 
 ## Fuego
 
-<http://fuegotest.org/wiki/Fuego_To_Do_List>
-
 ### Fuego Overview
 
 Fuego is a test framework specifically designed for embedded Linux testing.
 It supports automated testing of embedded targets from a host system, as it's primary method of test execution.
 
 The quick introduction to Fuego is that it consists of a host/target script engine, with a Jenkins front-end, and over 50 pre-packaged tests, installed in a docker container.
-
-<http://events.linuxfoundation.org/sites/events/files/slides/Introduction-to-Fuego.pdf>
-
-### Install Fuego
-
-<http://fuegotest.org/wiki/Fuego_Quickstart_Guide>
 
 ## Kernel CI
 
@@ -144,60 +140,28 @@ The master is a server machine with lava-server installed and it optionally supp
 * Scheduler - This is the piece that causes jobs to be run - periodically this will scan the database to check for queued test jobs and available test devices, starting jobs when the needed resources become available.
 * Dispatcher-master daemon - This communicates with the worker(s) using ZMQ.
 
-#### install master
+#### Software : LAVA server (master) TODO!!!!
 
-addr=10.20.1.198
+Board description
+device-type
+Web interface
+Job scheduling, priorities
 
-add linearo repository to apt source list
+What all boards of this “type” have in common
+u-boot , fastboot, barebox, etc.
+Load addresses
 
-```shell
-sudo echo "deb https://images.validation.linaro.org/production-repo stretch-backports main" >> /etc/apt/source.list
-```
+Bootloader environment
+Can inherit/extend other device-types (e.g. base-uboot)
+XML-RPC API
+device
+Specific to one instance of a board
 
-```shell
-wget https://images.validation.linaro.org/staging-repo/staging-repo.key.asc
-sudo apt-key add staging-repo.key.asc
-```
-
-update
-
-```shell
-sudo apt upgrade
-sudo apt update
-```
-
-install lava_server
-
-```shell
-sudo apt install postgresql apache2
-sudo service postgresql start
-sudo apt -t stretch-backports install lava
-```
-
-If the default Apache configuration from LAVA is suitable, you can enable it immediately:
-
-```shell
-sudo a2dissite 000-default
-sudo a2enmod proxy
-sudo a2enmod proxy_http
-sudo a2ensite lava-server.conf
-sudo service apache2 restart
-```
-
-##### Local Django Accounts
-
-After initial package installation, you might wish to create a local superuser account:
-
-```shell
-sudo lava-server manage createsuperuser --username $USERNAME --email=$EMAIL
-```
-
-If you do not specify the username and email address here, this command will prompt for them.
-An existing local Django superuser account can also be converted to an LDAP user account without losing data, using the mergeldapuser command, provided the LDAP username does not already exist in the LAVA instance:
-
-```shell
-sudo lava-server manage mergeldapuser --lava-user <lava_user> --ldap-user <ldap_user>
-```
+Board description
+Select device-type
+How to connect to serial console
+PDU: how to power on/off
+Can override/extend settings from device-type
 
 ### LAVA-worker
 
@@ -209,59 +173,70 @@ The worker is responsible for running the lava-slave daemon to start and monitor
 * Dispatcher - This manages all the operations on the device under test, according to the job submission and device parameters sent by the master.
 * Device Under Test (DUT)
 
-#### Install worker
+#### Software : LAVA dispatcher (slave) TODO!!!!!
 
-addr=10.20.1.118
+Manage all connections between boards and “real world”
+Serial consoles
+Services
+DHCP
+TFTP
+NFS
+NBD
+HTTP
 
-sudo apt --no-install-recommends install python-guestfs
+Power control
+USB / serial cables (FTDI)
+udev rules
+conmux / cu / ser2net
 
-```shell
-sudo apt install lava-dispatcher apache2
-```
+USB misc.
+fastboot
+gadget: ethernet, mass storage
 
-Change the dispatcher configuration in /etc/lava-dispatcher/lava-slave to allow the init script for lava-slave (/etc/init.d/lava-slave) to connect to the relevant lava-master instead of localhost. Change the port numbers, if required, to match those in use on the lava-master:
+## U-boot
 
-etc/lava-dispatcher/lava-slave
+(the Universal Bootloader) and Embedded Linux in the form of an editable Wiki.
 
-```config
-# Configuration for lava-slave daemon
+The "Universal Bootloader" ("Das U-Boot") is a monitor program.
+Free Software: full source code under GPL
+hosted on SourceForge: <http://sourceforge.net/projects/u-boot>
+production quality: used as default boot loader by several board vendors
+portable and easy to port and to debug
+many supported architectures: PPC, ARM, MIPS, x86, m68k, NIOS, Microblaze
+more than 216 boards supported by public source tree
+many, many features
 
-# URL to the master and the logger
-# MASTER_URL="tcp://<lava-master-dns>:5556"
-# LOGGER_URL="tcp://<lava-master-dns>:5555"
+easy to port to new architectures, new processors, and new boards
+easy to debug: serial console output as soon as possible
+features and commands configurable
+as small as possible
+as reliable as possible
 
-# Logging level should be uppercase (DEBUG, INFO, WARNING, ERROR)
-# LOGLEVEL="DEBUG"
+## barebox
 
-# Encryption
-# If set, will activate encryption using the master public and the slave
-# private keys
-# ENCRYPT="--encrypt"
-# MASTER_CERT="--master-cert /etc/lava-dispatcher/certificates.d/<master.key>"
-# SLAVE_CERT="--slave-cert /etc/lava-dispatcher/certificates.d/<slave.key_secret>"
-```
+barebox is a bootloader designed for embedded systems.
+It runs on a variety of architectures including x86, ARM, MIPS, PowerPC and others.
 
-Restart lava-slave once the changes are complete:
+barebox aims to be a versatile and flexible bootloader, not only for booting embedded Linux systems, but also for initial hardware bringup and development.
+barebox is highly configurable to be suitable as a full-featured development binary as well as for lean production systems.
+Just like busybox is the Swiss Army Knife for embedded Linux, barebox is the Swiss Army Knife for bare metal, hence the name.
 
-```shell
-sudo service lava-slave restart
-```
+## Reference
 
-#### Configuring apache2 on a worker
+<http://wiki.kernelci.org/>
 
-Some test job deployments will require a working Apache2 server to offer deployment files over the network to the device:
+<https://github.com/kernelci/lava-docker>
 
-```shell
-sudo cp /usr/share/lava-dispatcher/apache2/lava-dispatcher.conf /etc/apache2/sites-available/
-sudo a2ensite lava-dispatcher
-sudo service apache2 restart
-wget http://localhost/tmp/
-rm index.html
-```
+<https://github.com/kernelci/lava-slave-docker>
 
-You may also need to disable any existing apache2 configuration if this is a default apache2 installation:
+<http://fuegotest.org/wiki/FrontPage>
 
-```shell
-sudo a2dissite 000-default
-sudo service apache2 restart
-```
+<http://fuegotest.org/wiki/Fuego_Quickstart_Guide>
+
+<http://events.linuxfoundationorg/sites/events/files/slides/Introduction-to-Fuego.pdf>
+
+<http://baylibre.com/>
+
+[State of the U-Boot - Thomas Rini](https://www.youtube.com/watch?v=dKBUSMa6oZI)
+
+http://www.barebox.org/
