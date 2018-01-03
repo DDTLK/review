@@ -68,9 +68,9 @@ The setup supports multiple operation methods:
 * Direct test:
   * Board allocation, bring-up and test execution through Lava.
 
-## Further
+## Roadmap
 
-TODO!!!!!!
+Integration of fuego 1.2.1 + LAVA + Jenkins for an industrialisation of build and test
 
 ## Jenkins
 
@@ -140,28 +140,25 @@ The master is a server machine with lava-server installed and it optionally supp
 * Scheduler - This is the piece that causes jobs to be run - periodically this will scan the database to check for queued test jobs and available test devices, starting jobs when the needed resources become available.
 * Dispatcher-master daemon - This communicates with the worker(s) using ZMQ.
 
-#### Software : LAVA server (master) TODO!!!!
+#### Software : LAVA server (master)
 
-Board description
-device-type
-Web interface
-Job scheduling, priorities
+* Web nterface
+* Job scheduling, priorities
+* XML-RPC API
+* Board description
 
-What all boards of this “type” have in common
-u-boot , fastboot, barebox, etc.
-Load addresses
-
-Bootloader environment
-Can inherit/extend other device-types (e.g. base-uboot)
-XML-RPC API
-device
-Specific to one instance of a board
-
-Board description
-Select device-type
-How to connect to serial console
-PDU: how to power on/off
-Can override/extend settings from device-type
+  device-type
+  * What all boards of this “type” have in common
+    * u-boot , fastboot, barebox, etc.
+    * Load addresses
+    * Bootloader environment
+  * Can inherit/extend other device-types (e.g. base-uboot)
+  device
+  * Specific to one instance of a board
+    * Select device-type
+    * How to connect to serial console
+    * PDU: how to power on/off
+    * Can override/extend settings from device-type
 
 ### LAVA-worker
 
@@ -173,23 +170,26 @@ The worker is responsible for running the lava-slave daemon to start and monitor
 * Dispatcher - This manages all the operations on the device under test, according to the job submission and device parameters sent by the master.
 * Device Under Test (DUT)
 
-#### Software : LAVA dispatcher (slave) TODO!!!!!
+#### Software : LAVA dispatcher (slave) 
 
-Manage all connections between boards and “real world”
-Serial consoles
-Services
+##### Manage all connections between boards and “real world”
+
+###### Services
+
 DHCP
 TFTP
 NFS
 NBD
 HTTP
 
-Power control
+###### Serial consoles
+
 USB / serial cables (FTDI)
 udev rules
 conmux / cu / ser2net
 
-USB misc.
+###### USB misc
+
 fastboot
 gadget: ethernet, mass storage
 
@@ -239,4 +239,4 @@ Just like busybox is the Swiss Army Knife for embedded Linux, barebox is the Swi
 
 [State of the U-Boot - Thomas Rini](https://www.youtube.com/watch?v=dKBUSMa6oZI)
 
-http://www.barebox.org/
+<http://www.barebox.org/>
