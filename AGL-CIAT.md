@@ -170,7 +170,7 @@ The worker is responsible for running the lava-slave daemon to start and monitor
 * Dispatcher - This manages all the operations on the device under test, according to the job submission and device parameters sent by the master.
 * Device Under Test (DUT)
 
-#### Software : LAVA dispatcher (slave) 
+#### Software : LAVA dispatcher (slave)
 
 ##### Manage all connections between boards and “real world”
 
@@ -221,7 +221,7 @@ barebox aims to be a versatile and flexible bootloader, not only for booting emb
 barebox is highly configurable to be suitable as a full-featured development binary as well as for lean production systems.
 Just like busybox is the Swiss Army Knife for embedded Linux, barebox is the Swiss Army Knife for bare metal, hence the name.
 
-## Reference
+## References
 
 <http://wiki.kernelci.org/>
 
